@@ -1,0 +1,176 @@
+<nb-card *ngIf="addPanelShow" class="inline-form-card">
+  <nb-card-header>添加新课程</nb-card-header>
+  <nb-card-body style="overflow: unset">
+    <form [formGroup]="addForm" class="form-inline">
+      <input formControlName="label" type="text" class="form-control full-width"
+             [ngClass]="{'form-control-danger' : addForm.get('label').invalid && addForm.get('label').dirty}"
+             placeholder="分类名称">
+      <div class="form-group full-width">
+        <select formControlName="catalog" class="form-control full-width">
+          <option selected value="">请选择课程分类</option>
+          <option *ngFor="let item of catalogs" value="{{item.label}}">{{item.label}}</option>
+        </select>
+      </div>
+      <div class="form-group full-width">
+        <select formControlName="city" class="form-control full-width">
+          <option selected value="">请选择城市</option>
+          <option *ngFor="let item of cities" value="{{item.label}}">{{item.label}}</option>
+        </select>
+      </div>
+      <div class="start-time form-group full-width">
+        <input formControlName="start" type="text" class="form-control full-width"
+               [ngClass]="{'form-control-danger' : addForm.get('label').invalid && addForm.get('label').dirty}"
+               placeholder="开始时间">
+      </div>
+      <div class="end-time form-group full-width">
+        <input formControlName="end" type="text" class="form-control full-width"
+               [ngClass]="{'form-control-danger' : addForm.get('label').invalid && addForm.get('label').dirty}"
+               placeholder="结束时间">
+      </div>
+      <nb-checkbox formControlName="isPublic">上架</nb-checkbox>
+      <button type="button" (click)="add()" class="btn btn-primary">添加</button>
+    </form>
+  </nb-card-body>
+</nb-card>
+
+
+<nb-card>
+  <nb-card-header>
+    课程管理
+    <small class="float-right">
+      <a href="javascript:void(0)" (click)="showAddPanel()">添加</a><a href="javascript:;" *ngIf="selected.length > 0">
+      | </a>
+      <a *ngIf="selected.length > 0" href="javascript:void(0)" (click)="remove()">删除</a>
+    </small>
+  </nb-card-header>
+
+  <nb-card-body>
+    <ngx-datatable
+      #mydatatable
+      class="material"
+      [headerHeight]="50"
+      [columnMode]="'force'"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [rows]="rows"
+      [limit]="10"
+      [selected]="selected"
+      [selectionType]="'checkbox'"
+      [selectAllRowsOnPage]="false"
+      (select)='onSelect($event)'>
+      <ngx-datatable-column
+        [width]="30"
+        [sortable]="false"
+        [canAutoResize]="false"
+        [draggable]="false"
+        [resizeable]="false"
+        [headerCheckboxable]="true"
+        [checkboxable]="true">
+      </ngx-datatable-column>
+      <ngx-datatable-column name="label">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          名称
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            <span
+              title="Double click to edit"
+              (click)="editing[rowIndex + '-label'] = true"
+              *ngIf="!editing[rowIndex + '-label']">
+              {{value}}
+            </span>
+          <input
+            autofocus
+            (blur)="updateValue($event, 'label', rowIndex)"
+            *ngIf="editing[rowIndex+ '-label']"
+            type="text"
+            [value]="value"/>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="catalog">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          分类
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+             <span
+               title="Double click to edit"
+               (click)="editing[rowIndex + '-catalog'] = true"
+               *ngIf="!editing[rowIndex + '-catalog']">
+              {{value}}
+            </span>
+          <select
+            *ngIf="editing[rowIndex + '-catalog']"
+            (blur)="editing[rowIndex + '-catalog'] = false"
+            (change)="updateValue($event, 'catalog', rowIndex)"
+            [value]="value">
+            <option *ngFor="let item of catalogs" value="{{item.label}}">{{item.label}}</option>
+          </select>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="city">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          城市
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+             <span
+               (click)="editing[rowIndex + '-city'] = true"
+               *ngIf="!editing[rowIndex + '-city']">
+              {{value}}
+            </span>
+          <select
+            *ngIf="editing[rowIndex + '-city']"
+            (blur)="editing[rowIndex + '-city'] = false"
+            (change)="updateValue($event, 'city', rowIndex)"
+            [value]="value">
+            <option *ngFor="let item of cities" value="{{item.label}}">{{item.label}}</option>
+          </select>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column [minWidth]="220" name="start">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          开始时间
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            <span
+              (click)="editing[rowIndex + '-start'] = true"
+              *ngIf="!editing[rowIndex + '-start']">
+              {{value}}
+            </span>
+          <input
+            autofocus
+            (blur)="updateValue($event, 'start', rowIndex)"
+            *ngIf="editing[rowIndex+ '-start']"
+            type="text"
+            [value]="value"/>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column [minWidth]="220" name="end">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          结束时间
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            <span
+              (click)="editing[rowIndex + '-end'] = true"
+              *ngIf="!editing[rowIndex + '-end']">
+              {{value}}
+            </span>
+          <input
+            autofocus
+            (blur)="updateValue($event, 'end', rowIndex)"
+            *ngIf="editing[rowIndex+ '-end']"
+            type="text"
+            [value]="value"/>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="isPublic">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          上架
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+          <a (click)="publish(value,'isPublic',rowIndex)" href="javascript:;">
+            {{value ? '下架' : '上架'}}
+          </a>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </nb-card-body>
+</nb-card>

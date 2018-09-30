@@ -1,0 +1,11 @@
+<nb-card>
+  <nb-card-header>
+    签到查询
+    <a class="float-right" href="http://wx.dutyhb.com/api/sign/export">导出EXCEL</a>
+    <!--<angular2csv class="float-right" [data]="signs" filename="test.csv" [options]="options">导出CSV</angular2csv>-->
+  </nb-card-header>
+
+  <nb-card-body>
+    <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
+  </nb-card-body>
+</nb-card>

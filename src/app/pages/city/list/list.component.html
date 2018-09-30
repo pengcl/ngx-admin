@@ -1,0 +1,83 @@
+<nb-card *ngIf="addPanelShow" class="inline-form-card">
+  <nb-card-header>添加新城市</nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="addForm" class="form-inline">
+      <input formControlName="label" type="text" class="form-control full-width"
+             [ngClass]="{'form-control-danger' : addForm.get('label').invalid && addForm.get('label').dirty}"
+             placeholder="分类名称">
+      <button type="button" (click)="add()" class="btn btn-primary">添加</button>
+    </form>
+  </nb-card-body>
+</nb-card>
+
+
+<nb-card>
+  <nb-card-header>
+    城市管理
+    <small class="float-right">
+      <a href="javascript:void(0)" (click)="showAddPanel()">添加</a><a href="javascript:;" *ngIf="selected.length > 0"> | </a>
+      <a *ngIf="selected.length > 0" href="javascript:void(0)" (click)="remove()">删除</a>
+    </small>
+  </nb-card-header>
+
+  <nb-card-body>
+    <ngx-datatable
+      #mydatatable
+      class="material"
+      [headerHeight]="50"
+      [columnMode]="'force'"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [rows]="rows"
+      [limit]="10"
+      [selected]="selected"
+      [selectionType]="'checkbox'"
+      [selectAllRowsOnPage]="false"
+      (select)='onSelect($event)'>
+      <ngx-datatable-column
+        [width]="30"
+        [sortable]="false"
+        [canAutoResize]="false"
+        [draggable]="false"
+        [resizeable]="false"
+        [headerCheckboxable]="true"
+        [checkboxable]="true">
+      </ngx-datatable-column>
+      <ngx-datatable-column name="label">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          名称
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+            <span
+              title="Double click to edit"
+              (click)="editing[rowIndex + '-label'] = true"
+              *ngIf="!editing[rowIndex + '-label']">
+              {{value}}
+            </span>
+          <input
+            autofocus
+            (blur)="updateValue($event, 'label', rowIndex)"
+            *ngIf="editing[rowIndex+ '-label']"
+            type="text"
+            [value]="value"/>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="createAt">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          添加日期
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-value="value">
+          {{value}}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="updateAt">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          最后更新日期
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-value="value">
+          {{value}}
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </nb-card-body>
+</nb-card>
