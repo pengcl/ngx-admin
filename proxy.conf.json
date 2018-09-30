@@ -1,0 +1,20 @@
+{
+  "/api": {
+    "target": "http://127.0.0.1:3015",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/": ""
+    },
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/kpi": {
+    "target": "http://test.api.klub11.com",
+    "secure": false,
+    "pathRewrite": {
+      "^/kpi/": ""
+    },
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

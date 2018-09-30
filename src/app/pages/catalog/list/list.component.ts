@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
-import {FormGroup, FormControl, Validators} from "@angular/forms";
-import {DatePipe} from "@angular/common";
-import {ToasterService} from "angular2-toaster";
-import {CatalogService} from "../../../@core/data/catalog.service";
+import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {DatePipe} from '@angular/common';
+import {ToasterService} from 'angular2-toaster';
+import {CatalogService} from '../../../@core/data/catalog.service';
 
 @Component({
   selector: 'ngx-catalog-list',
@@ -25,7 +25,7 @@ export class CatalogListComponent {
 
     this.addForm = new FormGroup({
       label: new FormControl('', [Validators.required, Validators.minLength(2)])
-    })
+    });
   }
 
   getData() {
@@ -38,7 +38,7 @@ export class CatalogListComponent {
             label: item.label,
             createAt: this.datePipe.transform(item.meta.createAt, 'yyyy-MM-dd HH:mm:ss'),
             updateAt: this.datePipe.transform(item.meta.updateAt, 'yyyy-MM-dd HH:mm:ss')
-          })
+          });
         });
         this.rows = catalogs;
       }

@@ -3,10 +3,10 @@ import {NgModule} from '@angular/core';
 
 import {PagesComponent} from './pages.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
-import {CatalogListComponent} from "./catalog/list/list.component";
-import {CityListComponent} from "./city/list/list.component";
-import {CourseListComponent} from "./course/list/list.component";
-import {SignListComponent} from "./sign/list/list.component";
+import {CatalogListComponent} from './catalog/list/list.component';
+import {CityListComponent} from './city/list/list.component';
+import {CourseListComponent} from './course/list/list.component';
+import {SignListComponent} from './sign/list/list.component';
 
 const routes: Routes = [{
   path: '',
